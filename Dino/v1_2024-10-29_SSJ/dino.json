@@ -1,0 +1,68 @@
+{
+  "dino": {
+    "baseURL": "https://www.dinoonline.com.ar/super/categoria?_dyncharset=utf-8&Dy=1&Nty=1&Ntt=pantene",
+    "resultsPerPage": 36,
+    "pagesToDownload": 3,
+    "fields": {
+      "priceLocator": "//*[contains(concat(' ', @class, ' '), concat(' ', 'precio-unidad', ' '))]/span",
+      "titleLocator": "//*[contains(concat(' ', @class, ' '), concat(' ', 'description limitRow tooltipHere', ' '))]",
+      "imageLocator": "//*[contains(@class, 'image')]/a/img",
+      "promoPriceLocator": "//*[contains(concat(' ', @class, ' '), concat(' ', 'item-promo', ' '))]",
+      "referencePriceLocator": "//div[contains(@class, 'precio-unidad')]/p/span",
+      "linkLocator": "//*[contains(@class, 'image')]/a",
+      "brandLocator": "//*[contains(concat(' ', @class, ' '), concat(' ', 'brand-class', ' '))]",
+      "categoryLocator": "//*[contains(concat(' ', @class, ' '), concat(' ', 'category-class', ' '))]",
+      "nextPageLocator": "ul.pagination li:last-child a:not([disabled])"
+    },
+    "excelConfig": {
+      "fileName": "dino_data.xlsx",
+      "sheetName": "Dino Products",
+      "columns": [
+        {
+          "name": "Título",
+          "field": "title"
+        },
+        {
+          "name": "Precio",
+          "field": "price"
+        },
+        {
+          "name": "Precio Promocional",
+          "field": "promoPrice"
+        },
+        {
+          "name": "Precio Referencial",
+          "field": "referencePrice"
+        },
+        {
+          "name": "Precio por Kg",
+          "field": "pricePerKg"
+        },
+        {
+          "name": "Descuento",
+          "field": "discount"
+        },
+        {
+          "name": "Imagen",
+          "field": "image"
+        },
+        {
+          "name": "Enlace",
+          "field": "link"
+        },
+        {
+          "name": "Marca",
+          "field": "brand"
+        },
+        {
+          "name": "Categoría",
+          "field": "category"
+        },
+        {
+          "name": "EAN",
+          "field": "ean"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+    "carrefour": {
+      "baseURL": "https://www.carrefour.com.ar/Almacen?page=",
+      "pagesToDownload": 3,
+      "settings": {
+          "pageLoadTimeout": 120000, 
+          "waitAfterPageLoad": 5000, 
+          "waitAfterScroll": 2000   
+      },
+      "fields": {
+        "titleLocator": "h3.vtex-product-summary-2-x-productBrand span",
+        "priceLocator": "span.valtech-carrefourar-product-price-0-x-sellingPriceValue",
+        "regularPriceLocator": "span.valtech-carrefourar-product-price-0-x-listPriceValue",
+        "pricePerKgLocator": "span.valtech-carrefourar-dynamic-weight-price-0-x-currencyContainer",
+        "imageLocator": "img.vtex-product-summary-2-x-imageNormal",
+        "linkLocator": "div.valtech-carrefourar-search-result-2-x-gallery section a",
+        "nextButtonLocator": "button.vtex-button.vtex-button--primary"
+      },
+      "excelConfig": {
+        "fileName": "carrefour_productos",
+        "sheetName": "Productos",
+        "columns": [
+          { "header": "Título", "field": "title" },
+          { "header": "Precio", "field": "price" },
+          { "header": "Precio Regular", "field": "regularPrice" },
+          { "header": "Precio por Kg", "field": "pricePerKg" },
+          { "header": "Imagen", "field": "image" },
+          { "header": "Link", "field": "link" }
+        ]
+      }
+    }
+}

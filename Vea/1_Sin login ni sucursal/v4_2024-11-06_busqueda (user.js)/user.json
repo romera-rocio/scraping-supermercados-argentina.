@@ -1,0 +1,31 @@
+{
+    "vea": {
+        "baseURL": "https://www.vea.com.ar/",
+        "fields": {
+            "titleLocator": "//h2[contains(@class, 'vtex-product-summary-2-x-productNameContainer')]//span[contains(@class, 'vtex-product-summary-2-x-productBrand')]",
+            "priceLocator": "//div[contains(@class, 'veaargentina-store-theme-1dCOMij_MzTzZOCohX1K7w')]",
+            "regularPriceLocator": "//div[contains(@class, 'veaargentina-store-theme-2t-mVsKNpKjmCAEM_AMCQH')]",
+            "pricePerKgLocator": "//div[contains(@class, 'veaargentina-store-theme-1QiyQadHj-1_x9js9EXUYK')]",
+            "discountLocator": "//span[contains(@class, 'veaargentina-store-theme-3Hc7_vKK9au6dX_Su4b0Ae')]",
+            "imageLocator": "//img[contains(@class, 'vtex-product-summary-2-x-image')]",
+            "linkLocator": "//a[contains(@class, 'vtex-product-summary-2-x-clearLink')]",
+            "brandLocator": "//span[contains(@class, 'vtex-product-summary-2-x-productBrandName')]",
+            "categoryLocator": "//div[contains(@class, 'vtex-product-summary-2-x-productBrandContainer')]//span"
+        },
+        "excelConfig": {
+            "fileName": "vea_data",
+            "sheetName": "Vea Products",
+            "columns": [
+                {"name": "Título", "field": "title"},
+                {"name": "Precio", "field": "price"},
+                {"name": "Precio Regular", "field": "regularPrice"},
+                {"name": "Precio por Kg", "field": "pricePerKg"},
+                {"name": "Descuento", "field": "discount"},
+                {"name": "Imagen", "field": "image"},
+                {"name": "Enlace", "field": "link"},
+                {"name": "Marca", "field": "brand"},
+                {"name": "Categoría", "field": "category"}
+            ]
+        }
+    }
+}

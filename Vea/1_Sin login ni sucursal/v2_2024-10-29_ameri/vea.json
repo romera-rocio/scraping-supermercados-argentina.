@@ -1,0 +1,35 @@
+{
+    "vea": {
+      "baseURL": "https://www.vea.com.ar/almacen",
+      "resultsPerPage": 50,
+      "pagesToDownload": 1,
+      "fields": {
+        "title": "span.vtex-product-summary-2-x-productBrand",
+        "price": "div#priceContainer",
+        "regularPrice": "#priceContainer",
+        "pricePerKg": "div.veaargentina-store-theme-1QiyQadHj-1_x9js9EXUYK",
+        "discount": "div.veaargentina-store-theme-SpFtPOZlANEkxX04GqL31 span",
+        "image": "img.vtex-product-summary-2-x-imageNormal",
+        "link": "a.vtex-product-summary-2-x-clearLink",
+        "brand": "span.vtex-product-summary-2-x-productBrandName",
+        "category": "div.vtex-product-summary-2-x-productBrandContainer span"
+      },
+      "excelConfig": {
+        "fileName": "vea_data.xlsx",
+        "sheetName": "Vea Products",
+        "columns": [
+          {"name": "Título", "field": "title"},
+          {"name": "Precio", "field": "price"},
+          {"name": "Precio Regular", "field": "regularPrice"},
+          {"name": "Precio por Kg", "field": "pricePerKg"},
+          {"name": "Descuento", "field": "discount"},
+          {"name": "Imagen", "field": "image"},
+          {"name": "Enlace", "field": "link"},
+          {"name": "Marca", "field": "brand"},
+          {"name": "Categoría", "field": "category"},
+          {"name": "EAN", "field": "ean"}
+        ]
+      }
+    }
+  }
+  

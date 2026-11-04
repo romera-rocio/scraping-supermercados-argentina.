@@ -1,0 +1,133 @@
+Permite ingresar a una palabra, ean o link .Iteraacion por page
+const { chromium } = require('playwright');
+const XLSX = require('xlsx');
+const fs = require('fs');
+
+async function autoScroll(page) {
+    await page.evaluate(async () => {
+        await new Promise((resolve) => {
+            let totalHeight = 0;
+            const distance = 100;
+            const timer = setInterval(() => {
+                const scrollHeight = document.body.scrollHeight;
+                window.scrollBy(0, distance);
+                totalHeight += distance;
+
+                if (totalHeight >= scrollHeight) {
+                    clearInterval(timer);
+                    resolve();
+                }
+            }, 100);
+        });
+    });
+}
+
+const scrape = async (input) => {
+    try {
+        const config = JSON.parse(fs.readFileSync('user.json', 'utf8')).vea;
+        console.log(`Iniciando scraping de VEA...`);
+
+        const browser = await chromium.launch({ 
+            headless: false,
+            slowMo: 100
+        });
+        const context = await browser.newContext();
+        const page = await context.newPage();
+
+        let baseSearchURL;
+        
+        // Detecta el tipo de entrada y construye la URL base
+        if (/^\d+$/.test(input)) {
+            baseSearchURL = `https://www.vea.com.ar/${input}?_q=${input}&map=ft`;
+        } else if (input.startsWith('http')) {
+            baseSearchURL = input;
+        } else {
+            const query = encodeURIComponent(input);
+            baseSearchURL = `https://www.vea.com.ar/${query}?_q=${query}&map=ft`;
+        }
+
+        console.log(`Usando la URL base de búsqueda: ${baseSearchURL}`);
+
+        let pageData = [];
+        const maxPages = 5; // Número máximo de páginas a iterar
+        for (let pageNumber = 1; pageNumber <= maxPages; pageNumber++) {
+            const searchURL = `${baseSearchURL}&page=${pageNumber}`;
+            console.log(`Visitando la página ${pageNumber}: ${searchURL}`);
+
+            await page.goto(searchURL, { waitUntil: 'networkidle', timeout: 60000 });
+            await page.waitForLoadState('domcontentloaded');
+            await page.waitForTimeout(3000); // Espera para asegurar la carga completa de la página
+
+            await autoScroll(page);
+
+            const extractData = async (selector) => await page.$$eval(selector, elements => elements.map(el => el.textContent.trim()));
+            const extractSrc = async (selector) => await page.$$eval(selector, elements => elements.map(el => el.src));
+            const extractHref = async (selector) => await page.$$eval(selector, elements => elements.map(el => el.href));
+
+            const titles = await extractData(config.fields.titleLocator);
+            const prices = await extractData(config.fields.priceLocator);
+            const regularPrices = await extractData(config.fields.regularPriceLocator);
+            const pricePerKg = await extractData(config.fields.pricePerKgLocator);
+            const discounts = await extractData(config.fields.discountLocator);
+            const images = await extractSrc(config.fields.imageLocator);
+            const links = await extractHref(config.fields.linkLocator);
+            const brands = await extractData(config.fields.brandLocator);
+            const categories = await extractData(config.fields.categoryLocator);
+
+            console.log(`Títulos extraídos en la página ${pageNumber}: ${titles.length}`);
+
+            const currentPageData = titles.map((title, index) => ({
+                title: title || 'N/A',
+                price: prices[index] || 'N/A',
+                regularPrice: regularPrices[index] || 'N/A',
+                pricePerKg: pricePerKg[index] || 'N/A',
+                discount: discounts[index] || 'N/A',
+                image: images[index] || 'N/A',
+                link: links[index] || 'N/A',
+                brand: brands[index] || 'N/A',
+                category: categories[index] || 'N/A'
+            }));
+
+            pageData = pageData.concat(currentPageData);
+
+            // Si no hay resultados en la página actual, detiene la iteración
+            if (titles.length === 0) {
+                console.log(`No se encontraron más productos en la página ${pageNumber}. Terminando iteración.`);
+                break;
+            }
+        }
+
+        console.log(`Total de productos descargados: ${pageData.length}`);
+        await browser.close();
+
+        const workbook = XLSX.utils.book_new();
+        const worksheetData = pageData.map(item => {
+            const rowData = {};
+            config.excelConfig.columns.forEach(column => {
+                rowData[column.field] = item[column.field] || 'N/A';
+            });
+            return rowData;
+        });
+
+        const worksheet = XLSX.utils.json_to_sheet(worksheetData);
+        XLSX.utils.book_append_sheet(workbook, worksheet, config.excelConfig.sheetName);
+
+        const date = new Date();
+        const fileName = `${config.excelConfig.fileName}_${date.toISOString().split('T')[0]}.xlsx`;
+        XLSX.writeFile(workbook, fileName);
+
+        console.log(`Archivo Excel creado: ${fileName}`);
+        console.log(`Total de productos descargados: ${pageData.length}`);
+
+    } catch (error) {
+        console.error('Error en el scraping de Vea:', error);
+    }
+};
+
+// Captura el input desde la línea de comandos
+const input = process.argv[2];
+if (input) {
+    scrape(input);
+} else {
+    console.error('Por favor, proporciona un EAN, palabra o URL como argumento.');
+}

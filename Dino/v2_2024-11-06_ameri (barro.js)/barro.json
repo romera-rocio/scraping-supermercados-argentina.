@@ -1,0 +1,89 @@
+{
+    "dino": {
+      "baseURL": "https://www.dinoonline.com.ar/super/categoria?_dyncharset=utf-8&Dy=1&Nty=1&Ntt={SEARCH}",
+      "eanSingleResult": true,
+      "pagesToDownload": 3,
+      "fields": {
+        "titleLocator": "//*[contains(concat(' ', @class, ' '), 'description limitRow tooltipHere')]",
+        "priceLocator": "//*[contains(concat(' ', @class, ' '), 'precio-unidad')]/span",
+        "promoPriceLocator": "div.precio-unidad > p > span",
+        "referencePriceLocator": "div.precio-referencia",
+        "imageLocator": "//*[contains(@class, 'image')]/a/img",
+        "linkLocator": "//*[contains(@class, 'image')]/a",
+        "brandLocator": "//*[contains(concat(' ', @class, ' '), 'brand-class')]",
+        "categoryLocator": "//*[contains(concat(' ', @class, ' '), 'category-class')]"
+      },
+      "excelConfig": {
+        "fileName": "dino_data",
+        "sheetName": "Dino Products",
+        "columns": [
+          { "name": "Título", "field": "title" },
+          { "name": "Precio", "field": "price" },
+          { "name": "Precio Promocional", "field": "promoPrice" },
+          { "name": "Precio Referencial", "field": "referencePrice" },
+          { "name": "Imagen", "field": "image" },
+          { "name": "Enlace", "field": "link" },
+          { "name": "Marca", "field": "brand" },
+          { "name": "Categoría", "field": "category" }
+        ]
+      }
+    },
+    "vea": {
+      "baseURL": "https://www.vea.com.ar/{SEARCH}?_q={SEARCH}&map=ft",
+      "eanSingleResult": true,
+      "pagesToDownload": 3,
+      "fields": {
+          "titleLocator": "span.vtex-product-summary-2-x-productBrand",
+          "priceLocator": "div#priceContainer",
+          "regularPriceLocator": "div.veaargentina-store-theme-2t-mVsKNpKjmCAEM_AMCQH",
+          "pricePerKgLocator": "div.veaargentina-store-theme-1QiyQadHj-1_x9js9EXUYK",
+          "discountLocator": "div.veaargentina-store-theme-SpFtPOZlANEkxX04GqL31 span",
+          "imageLocator": "img.vtex-product-summary-2-x-imageNormal",
+          "linkLocator": "a.vtex-product-summary-2-x-clearLink",
+          "brandLocator": "span.vtex-product-summary-2-x-productBrandName",
+          "categoryLocator": "div.vtex-product-summary-2-x-productBrandContainer span"
+      },
+      "excelConfig": {
+          "fileName": "vea_data",
+          "sheetName": "Vea Products",
+          "columns": [
+              { "name": "Título", "field": "title" },
+              { "name": "Precio", "field": "price" },
+              { "name": "Precio Regular", "field": "regularPrice" },
+              { "name": "Precio por Kg", "field": "pricePerKg" },
+              { "name": "Descuento", "field": "discount" },
+              { "name": "Imagen", "field": "image" },
+              { "name": "Enlace", "field": "link" },
+              { "name": "Marca", "field": "brand" },
+              { "name": "Categoría", "field": "category" },
+              { "name": "EAN", "field": "ean" }
+          ]
+      }
+    },
+    "disco": {
+      "baseURL": "https://www.disco.com.ar/{SEARCH}?_q={SEARCH}&map=ft",
+      "eanSingleResult": true,
+      "pagesToDownload": 2,
+      "fields": {
+        "titleLocator": "#gallery-layout-container section a article div.vtex-product-summary-2-x-nameContainer h2 span",
+        "priceLocator": "#priceContainer",
+        "regularPriceLocator": "div.discoargentina-store-theme-1QiyQadHj-1_x9js9EXUYK",
+        "discountLocator": "#gallery-layout-container section a article div.vtex-flex-layout-0-x-flexRow--mainRow-price-box div div div div span div:nth-child(2) div span",
+        "imageLocator": "img.vtex-product-summary-2-x-imageNormal",
+        "linkLocator": "#gallery-layout-container section a"
+      },
+      "excelConfig": {
+        "fileName": "disco_productos",
+        "sheetName": "Productos",
+        "columns": [
+          { "name": "Título", "field": "title" },
+          { "name": "Precio", "field": "price" },
+          { "name": "Precio Regular", "field": "regularPrice" },
+          { "name": "Descuento", "field": "discount" },
+          { "name": "Imagen", "field": "image" },
+          { "name": "Enlace", "field": "link" }
+        ]
+      }
+    }
+  }
+  

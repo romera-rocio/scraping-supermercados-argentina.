@@ -1,0 +1,180 @@
+const { chromium } = require('playwright');
+const XLSX = require('xlsx');
+
+(async () => {
+  try {
+    // Configuración del navegador
+    const browser = await chromium.launch({ headless: false });
+    const page = await browser.newPage();
+
+    // URL de la página a visitar
+    const URL = "https://www.dinoonline.com.ar/super/categoria/supermami/_/N-muux25Zs17pmn?";
+
+    // Datos para almacenar los resultados
+    const allData = [];
+
+    // Navega a la página inicial
+    await page.goto(URL);
+    await page.waitForLoadState('networkidle'); // Espera a que la página esté completamente cargada
+
+    while (true) {
+      // Selecciona todos los elementos que contienen el precio y el título usando XPath
+      const priceLocators = page.locator('//*[contains(concat(" ", @class, " "), concat(" ", "precio-unidad", " "))]');
+      const titleLocators = page.locator('//*[contains(concat( " ", @class, " " ), concat( " ", "tooltipHere", " " ))]');
+
+      // Extrae todos los precios y títulos
+      const prices = await priceLocators.allInnerTexts();
+      const titles = await titleLocators.allInnerTexts();
+
+      // Agrega los datos extraídos a la lista
+      const pageData = titles.map((title, index) => ({
+        Título: title,
+        Precio: prices[index] || 'N/A' // Maneja el caso donde no hay precio correspondiente
+      }));
+      allData.push(...pageData); // Combina los datos de la página actual
+
+      // Selecciona el botón de "siguiente" de manera más precisa
+      const nextButton = page.locator('//*[@id="categoryLandingPage"]/div[2]/div[2]/div[5]/ul/li[4]/a'); // Busca el botón basado en el href que contiene "No=" para paginación
+      const isNextButtonVisible = await nextButton.isVisible();
+
+      if (isNextButtonVisible) {
+        await nextButton.click(); // Haz clic en el botón "siguiente"
+        await page.waitForLoadState('networkidle'); // Espera a que la nueva página esté completamente cargada
+      } else {
+        break; // Sale del bucle si no hay más páginas
+      }
+    }
+
+    // Cierra el navegador
+    await browser.close();
+
+    // Crea un libro de trabajo y una hoja
+    const workbook = XLSX.utils.book_new();
+    const worksheet = XLSX.utils.json_to_sheet(allData);
+
+    // Agrega la hoja al libro de trabajo
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Datos');
+
+    // Guarda el archivo Excel
+    XLSX.writeFile(workbook, 'precios_y_titulos.xlsx');
+
+    console.log('Datos guardados en precios_y_titulos.xlsx');
+  } catch (error) {
+    console.error('Error al extraer precios y títulos:', error);
+  }
+})();
+
+
+
+
+
+
+
+
+
+
+
+const { chromium } = require('playwright');
+const XLSX = require('xlsx');
+const fs = require('fs');
+
+(async () => {
+  try {
+    const supermarket = 'vea'; // Cambia a 'dino' o 'vea' según el supermercado que quieras scrapear
+    const config = JSON.parse(fs.readFileSync('config.json', 'utf8'))[supermarket];
+    
+    const browser = await chromium.launch({ headless: false });
+    const page = await browser.newPage();
+
+    const baseURL = config.baseURL;
+    const resultsPerPage = config.resultsPerPage;
+    const pagesToDownload = config.pagesToDownload;
+    const priceLocator = config.fields.priceLocator;
+    const titleLocator = config.fields.titleLocator;
+    const imageLocator = config.fields.imageLocator;
+    const promoPriceLocator = config.fields.promoPriceLocator || "//*[contains(@class, 'precio-promocion')]";
+    const referencePriceLocator = config.fields.referencePriceLocator || "//*[contains(@class, 'precio-referencia')]";
+    const linkLocator = config.fields.linkLocator || "//*[contains(@class, 'image')]/a";
+    const tooltipLocator = "//*[contains(@class, 'tooltipHere')]/@data-original-title"; // Selector para el tooltip
+
+    // Selectores para "Llevando 4" y "precio por unidad"
+    const promoQuantityLocator = "//*[contains(@class, 'precio-promocion')]//text()[1]"; // Extrae el texto que contiene "Llevando 4:"
+    const eachPriceLocator = "//*[contains(@class, 'precio-unidad')]//span[@class='sg_suggested']"; // Captura el precio por unidad
+
+    const allData = [];
+
+    for (let pageNumber = 0; pageNumber < pagesToDownload; pageNumber++) {
+      const offset = pageNumber * resultsPerPage;
+      const URL = `${baseURL}No=${offset}&Nrpp=${resultsPerPage}`;
+
+      try {
+        await page.goto(URL, { timeout: 120000 });
+        await page.waitForLoadState('networkidle');
+      } catch (error) {
+        console.error('Error al cargar la página:', error);
+        break;
+      }
+
+      const priceLocators = page.locator(priceLocator);
+      const titleLocators = page.locator(titleLocator);
+      const imageLocators = page.locator(imageLocator);
+      const promoPriceLocators = page.locator(promoPriceLocator);
+      const referencePriceLocators = page.locator(referencePriceLocator);
+      const linkLocators = page.locator(linkLocator);
+      const tooltipLocators = page.locator(tooltipLocator); // Agregado para los tooltips
+      
+      // Extraer la cantidad promocional y precio por unidad
+      const promoQuantities = await page.locator(promoQuantityLocator).allInnerTexts();
+      const eachPrices = await page.locator(eachPriceLocator).allInnerTexts();
+
+      const prices = await priceLocators.allInnerTexts();
+      const titles = await titleLocators.allInnerTexts();
+      const images = await imageLocators.evaluateAll(elements => 
+        elements.map(el => el.src.startsWith('//') ? 'https:' + el.src : el.src)
+      );
+      const promoPrices = await promoPriceLocators.allInnerTexts();
+      const referencePrices = await referencePriceLocators.allInnerTexts();
+      const links = await linkLocators.evaluateAll(elements => 
+        elements.map(el => 'https://www.dinoonline.com.ar' + el.getAttribute('href'))
+      );
+      const tooltips = await tooltipLocators.evaluateAll(elements => 
+        elements.map(el => el.getAttribute('data-original-title'))
+      ); // Extraer tooltips
+
+      const eans = links.map(link => {
+        const match = link.match(/\/A-(\d+)-/);
+        return match ? match[1] : 'N/A';
+      });
+
+      const pageData = titles.map((title, index) => ({
+        Título: title,
+        PrecioUnidad: prices[index] || 'N/A',
+        PrecioPromocion: promoPrices[index] || 'N/A',
+        PrecioReferencia: referencePrices[index] || 'N/A',
+        Imagen: images[index] || 'N/A',
+        Link: links[index] || 'N/A',
+        EAN: eans[index] || 'N/A',
+      }));
+
+      allData.push(...pageData);
+
+      if (prices.length < resultsPerPage) {
+        console.log('No hay más productos para cargar, finalizando...');
+        break;
+      }
+    }
+
+    await browser.close();
+
+    const fileName = "dinoonline";
+    const workbook = XLSX.utils.book_new();
+    const worksheet = XLSX.utils.json_to_sheet(allData);
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Datos');
+    XLSX.writeFile(workbook, `${fileName}.xlsx`);
+
+    console.log(`Datos guardados en ${fileName}.xlsx`);
+  } catch (error) {
+    console.error('Error al extraer precios y títulos:', error);
+  }
+})();
+

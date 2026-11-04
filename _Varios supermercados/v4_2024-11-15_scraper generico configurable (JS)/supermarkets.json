@@ -1,0 +1,59 @@
+{
+  "dino": {
+    "baseURL": "https://www.dinoonline.com.ar/super/categoria?_dyncharset=utf-8&Dy=1&Nty=1&Ntt={SEARCH}",
+    "pagesToDownload": 3,
+    "fields": {
+      "titleLocator": "//*[contains(concat(' ', @class, ' '), 'description limitRow tooltipHere')]",
+      "priceLocator": "//*[contains(concat(' ', @class, ' '), 'precio-unidad')]/span",
+      "promoPriceLocator": "//*[contains(concat(' ', @class, ' '), 'precio-promocion')]/span",
+      "referencePriceLocator": "//*[contains(concat(' ', @class, ' '), 'precio-referencia')]",
+      "imageLocator": "//*[contains(@class, 'image')]/a/img",
+      "linkLocator": "//*[contains(@class, 'image')]/a",
+      "brandLocator": "//*[contains(concat(' ', @class, ' '), 'brand-class')]",
+      "categoryLocator": "//*[contains(concat(' ', @class, ' '), 'category-class')]"
+    },
+    "excelConfig": {
+      "fileName": "dino_data",
+      "sheetName": "Dino Products",
+      "columns": [
+        { "name": "Título", "field": "title" },
+        { "name": "Precio", "field": "price" },
+        { "name": "Precio Promocional", "field": "promoPrice" },
+        { "name": "Precio Referencial", "field": "referencePrice" },
+        { "name": "Imagen", "field": "image" },
+        { "name": "Enlace", "field": "link" },
+        { "name": "Marca", "field": "brand" },
+        { "name": "Categoría", "field": "category" }
+      ]
+    }
+  },
+  "vea": {
+    "baseURL": "https://www.vea.com.ar/{SEARCH}?_q={SEARCH}&map=ft",
+    "pagesToDownload": 2,
+    "fields": {
+      "titleLocator": "//*[@id='gallery-layout-container']//h2/span",
+      "priceLocator": "//*[@id='gallery-layout-container']//div[contains(@class, 'price')]",
+      "promoPriceLocator": "//*[@id='priceContainer']",
+      "referencePriceLocator": "//*[@id='gallery-layout-container']//div[5]/div/div/div/div[1]/div/div[2]",
+      "imageLocator": "//img[contains(@class, 'vtex-product-summary-2-x-image')]",
+      "linkLocator": "//*[@id='gallery-layout-container']//a",
+      "brandLocator": "//*[@id='gallery-layout-container']//span[contains(@class, 'brand')]",
+      "categoryLocator": "//*[contains(concat(' ', @class, ' '), 'category-class')]"
+    },
+    "excelConfig": {
+      "fileName": "vea_data",
+      "sheetName": "Vea Products",
+      "columns": [
+        { "name": "Título", "field": "title" },
+        { "name": "Precio", "field": "price" },
+        { "name": "Precio Promocional", "field": "promoPrice" },
+        { "name": "Precio Referencial", "field": "referencePrice" },
+        { "name": "Imagen", "field": "image" },
+        { "name": "Enlace", "field": "link" },
+        { "name": "Marca", "field": "brand" },
+        { "name": "Categoría", "field": "category" },
+        { "name": "EAN", "field": "ean" }
+      ]
+    }
+  }
+}

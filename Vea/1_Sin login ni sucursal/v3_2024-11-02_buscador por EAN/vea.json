@@ -1,0 +1,34 @@
+{
+  "vea": {
+    "searchURL": "https://www.vea.com.ar",
+    "productContainer": "div.vtex-search-result-3-x-galleryItem",
+    "fields": {
+      "titleLocator": "span.vtex-product-summary-2-x-productBrand",
+      "priceLocator": "div#priceContainer",
+      "regularPriceLocator": "div.veaargentina-store-theme-2t-mVsKNpKjmCAEM_AMCQH",
+      "pricePerKgLocator": "div.veaargentina-store-theme-1QiyQadHj-1_x9js9EXUYK",
+      "discountLocator": "div.veaargentina-store-theme-SpFtPOZlANEkxX04GqL31 span",
+      "imageLocator": "img.vtex-product-summary-2-x-imageNormal",
+      "linkLocator": "a.vtex-product-summary-2-x-clearLink",
+      "brandLocator": "span.vtex-product-summary-2-x-productBrandName",
+      "categoryLocator": "div.vtex-product-summary-2-x-productBrandContainer span"
+    },
+    "paginationSelector": "a[title='Siguiente']",
+    "excelConfig": {
+      "fileName": "vea_data.xlsx",
+      "sheetName": "Vea Products",
+      "columns": [
+        {"name": "Título", "field": "title"},
+        {"name": "Precio", "field": "price"},
+        {"name": "Precio Regular", "field": "regularPrice"},
+        {"name": "Precio por Kg", "field": "pricePerKg"},
+        {"name": "Descuento", "field": "discount"},
+        {"name": "Imagen", "field": "image"},
+        {"name": "Enlace", "field": "link"},
+        {"name": "Marca", "field": "brand"},
+        {"name": "Categoría", "field": "category"},
+        {"name": "EAN", "field": "ean"}
+      ]
+    }
+  }
+}

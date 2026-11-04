@@ -1,0 +1,47 @@
+{
+  "disco": {
+    "baseURL": "https://www.disco.com.ar/disco?_q=disco&map=ft&page=",
+    "pagesToDownload": 2,
+    "fields": {
+      "titleLocator": "#gallery-layout-container section a article div.vtex-product-summary-2-x-nameContainer h2 span",
+      "priceLocator": "#priceContainer",
+      "regularPriceLocator": "div.discoargentina-store-theme-1QiyQadHj-1_x9js9EXUYK",
+      "pricePerKgLocator": "",
+      "discountLocator": "#gallery-layout-container section a article div.vtex-flex-layout-0-x-flexRow--mainRow-price-box div div div div span div:nth-child(2) div span",
+      "imageLocator": "img.vtex-product-summary-2-x-imageNormal",
+      "linkLocator": "#gallery-layout-container section a",
+      "brandLocator": "",
+      "categoryLocator": ""
+    },
+    "excelConfig": {
+      "fileName": "disco_productos",
+      "sheetName": "Productos",
+      "columns": [
+        {
+          "header": "Título",
+          "field": "title"
+        },
+        {
+          "header": "Precio",
+          "field": "price"
+        },
+        {
+          "header": "Precio Regular",
+          "field": "regularPrice"
+        },
+        {
+          "header": "Descuento",
+          "field": "discount"
+        },
+        {
+          "header": "Imagen",
+          "field": "image"
+        },
+        {
+          "header": "Link",
+          "field": "link"
+        }
+      ]
+    }
+  }
+}

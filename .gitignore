@@ -1,0 +1,16 @@
+# Dependencias
+node_modules/
+.venv/
+venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Datos de sesión / login (cookies, emails, contraseñas): NO subir
+Vea/3_Con login*/
+.env
+
+# Sistema
+.DS_Store
+Thumbs.db
+desktop.ini
